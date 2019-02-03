@@ -43,18 +43,18 @@ function initArray(){
 
 function setup() {
   createCanvas(400, 400);
-  background(255);
+  background(0);
   // stroke(0, 15);
   // noFill();
-  // stroke(0);
-  noStroke();
-  fill(0, 0, 0, 105);
+  stroke(0);
+  // noStroke();
+  fill(0, 0, 0);
   // t = 0;
   // xPosition = lngToXWorld(long, projectionSize)
   // yPosition = latToYWorld(long, projectionSize)
-  bgColor = 255;
-  numberPointX = 10;
-  numberPointY = 10;
+  bgColor = 0;
+  numberPointX = 30;
+  numberPointY = 30;
   pointArray = [];
   gapX = width / numberPointX -1;
   gapY = height / numberPointY - 1;
@@ -62,46 +62,57 @@ function setup() {
   startTime = Date.now();
 }
 
+function drawPosition(x, y, r ){
+  x = x*gapX+gapX;
+  y = y*gapY+gapY;
+  x =  20 * noise(x * 0.01, y * millis)+x;
+  y = 20 * noise(x * 0.01, y * millis)+y;
+  ellipse(x, y, r, r);
+}
+
 function draw() {
-  background(bgColor);
+  // background(bgColor);
+  background(0, 5);
   let millis = (Date.now() - startTime)/1000000;
-  for(let i = 0; i <pointArray.length ; i ++){
-      x = pointArray[i][0];
-      x = 50 * noise(x * 0.01, pointArray[i][1] * millis)+pointArray[i][0];
-      y = 50 * noise(x * 0.01, pointArray[i][1] * millis)+pointArray[i][1];
-      rect(x, y, 70, 70);
+  stroke('rgba(65,211,220, 0.5)');
+  drawGrid(millis);
+  drawPosition(10, 12, 30);
+  translate(1, 1);
+  // stroke('rgba(0,255,0, 0.5)');
+  // drawGrid(millis);
+  // drawPosition(18, 18, 40);
+  stroke('rgba(134,65,220, 0.5)');
+  translate(1, 1);
+  drawGrid(millis);
+  fill(255);
+  // drawPosition(20, 18, 80);
+  // blendMode(NORMAL);
+  // fill(0);
+
+
+}
+
+function drawGrid(millis){
+  for(let i = 0; i <pointArray.length-1 ; i ++){
+    x = pointArray[i][0];
+    y = pointArray[i][1]
+    xNext = pointArray[i+1][0];
+    yNext = pointArray[i+1][1];
+    x = 20 * noise(x * 0.01, y * millis)+x;
+    xNext = 20 * noise(xNext * 0.01, yNext * millis)+xNext;
+    y = 20 * noise(x * 0.01, y * millis)+y;
+    yNext = 20 * noise(xNext * 0.01, yNext * millis)+yNext;
+    if(pointArray[i+numberPointX]){
+      yNextHorizontal = pointArray[i+numberPointX][1];
+      xNextHorizontal = pointArray[i+numberPointX][0];
+      xNextHorizontal = 20 * noise(xNextHorizontal * 0.01, yNextHorizontal * millis)+xNextHorizontal;
+      yNextHorizontal = 20 * noise(xNextHorizontal * 0.01, yNextHorizontal * millis)+yNextHorizontal;
+      line(x, y, xNextHorizontal, yNextHorizontal);
+    }
+    // ellipse(x,y, 3, 3);
+    if(i%numberPointX == numberPointX-1){
+    } else {
+      line(x, y, xNext, yNext);
+    }
   }
-
-  // }
-  // commencer le tracer
-  // beginShape();
-  // for (let i = 0; i < width; i++) {
-
-    // let y = 100 * noise(i * 0.01, t * 0.005)+t*0.3;
-    // let x = i;
-
-    // #TEST
-    // angle entre 0 et 2PI
-    // let ang = map(i, 0, 200, 0, TWO_PI);
-
-    // radius : noise : une suite de valeur comme random mais en + harmonieux
-    // let rad = 200 * noise(i * 0.01, t * 0.005);
-
-    // coordonnée en x/y , utilisation du cos et sin pour former un cercle
-    // let x = rad * cos(ang);
-    // let y = rad * sin(ang);
-    // #END TEST
-
-    // courbe avec pour vecteur directeur x et y
-    // curveVertex(x, y);
-  }
-  // endShape();
-
-  // t += 1;
-
-  // clear the background every 600 frames using mod (%) operator
-  // if (frameCount % 1000 == 0) {
-	// background(255);
-  // }
-
-// }
+}
