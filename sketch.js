@@ -30,13 +30,24 @@ let gapX;
 let gapY;
 let startTime;
 let bgColor;
+let maxDistance;
+let middleY;
+let middleX;
+
+function getDistance(x1, y1, x2, y2){
+  return Math.sqrt(Math.pow((x2-x1),2)+Math.pow((y2-y1),2));
+}
+
+
 
 function initArray(){
   for(let i = 0 ; i < numberPointX; i++ ){
     for(let j = 0 ; j < numberPointY; j++ ){
       let positionX = i*gapX+gapX;
       let positionY = j*gapY+gapY;
-      pointArray.push([positionX,positionY]);
+      let radius = (maxDistance - getDistance(positionX, positionY, middleX, middleY))*0.05;
+
+      pointArray.push([positionX,positionY, radius]);
     }
   }
 }
@@ -48,29 +59,45 @@ function setup() {
   // noFill();
   // stroke(0);
   noStroke();
-  fill(0, 0, 0, 105);
+  fill(255, 0, 0);
   // t = 0;
   // xPosition = lngToXWorld(long, projectionSize)
   // yPosition = latToYWorld(long, projectionSize)
   bgColor = 255;
-  numberPointX = 10;
-  numberPointY = 10;
+  numberPointX = 60;
+  numberPointY = 60;
   pointArray = [];
   gapX = width / numberPointX -1;
   gapY = height / numberPointY - 1;
-  initArray();
   startTime = Date.now();
+  middleY = (numberPointY*0.5)*gapX+gapX;
+  middleX = (numberPointX*0.5)*gapY+gapY;
+  maxDistance = getDistance(0, 0, middleX, middleY );
+  initArray();
+  blendMode(DIFFERENCE);
+  fill('rgb(255,0,0)');
+  drawPointille();
+  translate(60, 60);
+  fill('rgb(255,255,0)');
+  drawPointille();
+}
+
+function drawPointille() {
+  for(let i = 0; i <pointArray.length ; i ++){
+    radius = pointArray[i][2];
+    x = pointArray[i][0];
+    y = pointArray[i][1];
+    // x = 50 * noise(x * 0.01, pointArray[i][1] * millis)+pointArray[i][0];
+    // y = 50 * noise(x * 0.01, pointArray[i][1] * millis)+pointArray[i][1];
+    ellipse(x, y, radius, radius);
+}
 }
 
 function draw() {
-  background(bgColor);
-  let millis = (Date.now() - startTime)/1000000;
-  for(let i = 0; i <pointArray.length ; i ++){
-      x = pointArray[i][0];
-      x = 50 * noise(x * 0.01, pointArray[i][1] * millis)+pointArray[i][0];
-      y = 50 * noise(x * 0.01, pointArray[i][1] * millis)+pointArray[i][1];
-      rect(x, y, 70, 70);
-  }
+  // background(bgColor);
+  // let millis = (Date.now() - startTime)/1000000;
+  // millis = Math.abs(Math.cos(millis*800)*20)/1000;
+
 
   // }
   // commencer le tracer
