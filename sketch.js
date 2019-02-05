@@ -63,54 +63,36 @@ function setup() {
 }
 
 function drawPosition(x, y, r ){
-  // blendMode(DIFFERENCE)
   x = x*gapX+gapX;
   y = y*gapY+gapY;
   x =  20 * noise(x * 0.01, y * millis)+x;
   y = 20 * noise(x * 0.01, y * millis)+y;
   ellipse(x, y, r, r);
-  // blendMode(NORMAL)
 
 }
 
 function draw() {
   // background(bgColor);
-  background(0, 5);
+  background(bgColor, 3);
   let millis = (Date.now() - startTime)/1000000;
-  // stroke('rgba(0,255,0, 0.5)');
-  // drawGrid(millis);
-  // drawPosition(10, 12, 100);
-  // translate(2, 2);
-  // stroke('rgba(0,0,255, 0.5)');
-  // drawGrid(millis);
-  // stroke('rgba(255,0,0, 0.5)');
-  // translate(2, 2);
-  // drawGrid(millis);
   stroke('rgba(255,255,255, 0.5)');
   translate(2, 2);
   drawGrid(millis);
-  fill(255, 5);
+  fill(0);
   drawPosition(18-millis*500, 18-millis*200, 40);
-
-  // drawPosition(20, 18, 80);
-  // blendMode(NORMAL);
-  // fill(0);
-
+  drawPosition(millis*500, millis*200, 40);
 }
 
 function getPointXGrid(x, y, millis){
-  // console.log(20 * noise( x*0.01, y*millis+x)+x);
   x = x*0.01;
   y = y*millis +x;
   return 20 * noise( x, y)+x*100;
   xLoc = random(0, 10);
   yLoc = random(10, 100);
-  // return 20 * noise(xLoc, yLoc  * millis)+x;
 }
 function getPointYGrid(x, y, millis){
   xLoc = random(0, 10);
   yLoc = random(10, 100);
-  // return 20 * noise(xLoc, yLoc)+y;
   return 20 * noise(x * 0.01, y * millis)+y;
 }
 
@@ -129,7 +111,6 @@ function drawGrid(millis){
       xNextHorizontal = pointArray[i+numberPointX][0];
       xNextHorizontal = getPointXGrid(xNextHorizontal, yNextHorizontal,millis);
       yNextHorizontal = getPointYGrid(xNextHorizontal, yNextHorizontal,millis);
-      // yNextHorizontal = 20 * noise(xNextHorizontal * 0.01, yNextHorizontal * millis)+yNextHorizontal;
       line(x, y, xNextHorizontal, yNextHorizontal);
     }
     // ellipse(x,y, 3, 3);
