@@ -42,7 +42,7 @@ function initArray(){
 }
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(600, 600);
   background(0);
   // stroke(0, 15);
   // noFill();
@@ -53,8 +53,8 @@ function setup() {
   // xPosition = lngToXWorld(long, projectionSize)
   // yPosition = latToYWorld(long, projectionSize)
   bgColor = 0;
-  numberPointX = 30;
-  numberPointY = 30;
+  numberPointX = 25;
+  numberPointY = 25;
   pointArray = [];
   gapX = width / numberPointX -1;
   gapY = height / numberPointY - 1;
@@ -63,33 +63,55 @@ function setup() {
 }
 
 function drawPosition(x, y, r ){
+  // blendMode(DIFFERENCE)
   x = x*gapX+gapX;
   y = y*gapY+gapY;
   x =  20 * noise(x * 0.01, y * millis)+x;
   y = 20 * noise(x * 0.01, y * millis)+y;
   ellipse(x, y, r, r);
+  // blendMode(NORMAL)
+
 }
 
 function draw() {
-  // background(bgColor);
+  background(bgColor);
   background(0, 5);
   let millis = (Date.now() - startTime)/1000000;
-  stroke('rgba(65,211,220, 0.5)');
+  stroke('rgba(0,255,0, 0.5)');
   drawGrid(millis);
-  drawPosition(10, 12, 30);
-  translate(1, 1);
-  // stroke('rgba(0,255,0, 0.5)');
+  drawPosition(10, 12, 100);
+  translate(2, 2);
+  stroke('rgba(0,0,255, 0.5)');
+  drawGrid(millis);
+  stroke('rgba(255,0,0, 0.5)');
+  translate(2, 2);
+  drawGrid(millis);
+  // stroke('rgba(255,255,255, 0.5)');
+  // translate(2, 2);
   // drawGrid(millis);
-  // drawPosition(18, 18, 40);
-  stroke('rgba(134,65,220, 0.5)');
-  translate(1, 1);
-  drawGrid(millis);
-  fill(255);
+  fill(255, 5);
+  drawPosition(18-millis*500, 18-millis*200, 40);
+
   // drawPosition(20, 18, 80);
   // blendMode(NORMAL);
   // fill(0);
 
+}
 
+function getPointXGrid(x, y, millis){
+  // console.log(20 * noise( x*0.01, y*millis+x)+x);
+  x = x*0.01;
+  y = y*millis +x;
+  return 20 * noise( x, y)+x*100;
+  xLoc = random(0, 10);
+  yLoc = random(10, 100);
+  // return 20 * noise(xLoc, yLoc  * millis)+x;
+}
+function getPointYGrid(x, y, millis){
+  xLoc = random(0, 10);
+  yLoc = random(10, 100);
+  // return 20 * noise(xLoc, yLoc)+y;
+  return 20 * noise(x * 0.01, y * millis)+y;
 }
 
 function drawGrid(millis){
@@ -98,15 +120,16 @@ function drawGrid(millis){
     y = pointArray[i][1]
     xNext = pointArray[i+1][0];
     yNext = pointArray[i+1][1];
-    x = 20 * noise(x * 0.01, y * millis)+x;
-    xNext = 20 * noise(xNext * 0.01, yNext * millis)+xNext;
-    y = 20 * noise(x * 0.01, y * millis)+y;
-    yNext = 20 * noise(xNext * 0.01, yNext * millis)+yNext;
+    x = getPointXGrid(x, y, millis);
+    y = getPointYGrid(x, y, millis);
+    xNext = getPointXGrid(xNext, yNext, millis);
+    yNext = getPointYGrid(xNext, yNext, millis);
     if(pointArray[i+numberPointX]){
       yNextHorizontal = pointArray[i+numberPointX][1];
       xNextHorizontal = pointArray[i+numberPointX][0];
-      xNextHorizontal = 20 * noise(xNextHorizontal * 0.01, yNextHorizontal * millis)+xNextHorizontal;
-      yNextHorizontal = 20 * noise(xNextHorizontal * 0.01, yNextHorizontal * millis)+yNextHorizontal;
+      xNextHorizontal = getPointXGrid(xNextHorizontal, yNextHorizontal,millis);
+      yNextHorizontal = getPointYGrid(xNextHorizontal, yNextHorizontal,millis);
+      // yNextHorizontal = 20 * noise(xNextHorizontal * 0.01, yNextHorizontal * millis)+yNextHorizontal;
       line(x, y, xNextHorizontal, yNextHorizontal);
     }
     // ellipse(x,y, 3, 3);
