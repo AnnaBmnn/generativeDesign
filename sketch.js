@@ -74,21 +74,21 @@ function drawPosition(x, y, r ){
 }
 
 function draw() {
-  background(bgColor);
+  // background(bgColor);
   background(0, 5);
   let millis = (Date.now() - startTime)/1000000;
-  stroke('rgba(0,255,0, 0.5)');
-  drawGrid(millis);
-  drawPosition(10, 12, 100);
-  translate(2, 2);
-  stroke('rgba(0,0,255, 0.5)');
-  drawGrid(millis);
-  stroke('rgba(255,0,0, 0.5)');
-  translate(2, 2);
-  drawGrid(millis);
-  // stroke('rgba(255,255,255, 0.5)');
+  // stroke('rgba(0,255,0, 0.5)');
+  // drawGrid(millis);
+  // drawPosition(10, 12, 100);
+  // translate(2, 2);
+  // stroke('rgba(0,0,255, 0.5)');
+  // drawGrid(millis);
+  // stroke('rgba(255,0,0, 0.5)');
   // translate(2, 2);
   // drawGrid(millis);
+  stroke('rgba(255,255,255, 0.5)');
+  translate(2, 2);
+  drawGrid(millis);
   fill(255, 5);
   drawPosition(18-millis*500, 18-millis*200, 40);
 
