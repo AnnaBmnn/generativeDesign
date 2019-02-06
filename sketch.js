@@ -19,11 +19,11 @@ clickButton.addEventListener("click", ()=> {
   console.log(geoplugin_latitude(), geoplugin_longitude());
   // navigator.geolocation.getCurrentPosition(success, error, options);
 })
-window.setInterval(function(){ 
-  // console.log(geoplugin_latitude(), geoplugin_longitude());
-  console.log("kikou");
- }, 2000);
 
+ var watchID = navigator.geolocation.watchPosition(function(position) {
+  console.log(position.coords.latitude, position.coords.longitude);
+}
+);
 // let t;
 // let long = 7.7521113;
 // let lat = 48.5734053;
