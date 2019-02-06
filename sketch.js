@@ -13,17 +13,12 @@ latToYWorld = function(lat, projectionSize) {
   return ((radius / 2 * Math.log((1 + Math.sin(lat * Math.PI / 180)) / (1 - Math.sin(lat * Math.PI / 180)))) - falseNorthing) * -1;
 };
 let checkOurPosition = false;
-const clickButton = document.querySelector("div");
-clickButton.addEventListener("click", ()=> {
-  checkOurPosition = true;
-  console.log(geoplugin_latitude(), geoplugin_longitude());
-  // navigator.geolocation.getCurrentPosition(success, error, options);
-})
+const clickButton = document.querySelector(".click");
+// clickButton.addEventListener("click", ()=> {
+//   checkOurPosition = true;
+//   console.log("click");
+// })
 
- var watchID = navigator.geolocation.watchPosition(function(position) {
-  console.log(position.coords.latitude, position.coords.longitude);
-}
-);
 // let t;
 // let long = 7.7521113;
 // let lat = 48.5734053;
@@ -42,56 +37,61 @@ let startTime;
 let bgColor;
 let pg;
 let pgPosition;
-var options = {
-  enableHighAccuracy: true,
-  timeout: 5000,
-  maximumAge: 0
-};
-
-function success(pos) {
-  var crd = pos.coords;
-
-  console.log('Votre position actuelle est :');
-  console.log(`Latitude : ${crd.latitude}`);
-  console.log(`Longitude : ${crd.longitude}`);
-  console.log(`La précision est de ${crd.accuracy} mètres.`);
-}
-
-function error(err) {
-  console.warn(`ERREUR (${err.code}): ${err.message}`);
-}
-
-
-
-function initArray(){
-  for(let i = 0 ; i < numberPointX; i++ ){
-    for(let j = 0 ; j < numberPointY; j++ ){
-      let positionX = i*gapX+gapX;
-      let positionY = j*gapY+gapY;
-      pointArray.push([positionX,positionY]);
-    }
-  }
-}
 
 function setup() {
-  createCanvas(600, 600);
-  pg = createGraphics(600, 600);
-  pgPosition = createGraphics(600, 600);
-  background(0);
-  stroke(0);
-  fill(0, 0, 0);
-  // t = 0;
-  // xPosition = lngToXWorld(long, projectionSize)
-  // yPosition = latToYWorld(long, projectionSize)
-  bgColor = 0;
-  numberPointX = 25;
-  numberPointY = 25;
-  pointArray = [];
-  gapX = width / numberPointX -1;
-  gapY = height / numberPointY - 1;
-  initArray();
-  startTime = Date.now();
+  createCanvas(windowWidth, windowHeight);
+  console.log('starting');
+  noStroke();
+  // get position once
+  if (!navigator.geolocation) {
+    alert("navigator.geolocation is not available");
+  }
+  // navigator.geolocation.getCurrentPosition(setPos);
+  id = navigator.geolocation.watchPosition(setPos);
+
 }
+
+function setPos(position) {
+  var lat = position.coords.latitude;
+  var lng = position.coords.longitude;
+  background(0);
+  fill(255);
+  textSize(32);
+  text("Current position: " + nf(lat,2,2) + " " + nf(lng,2,2), 10, height/2);
+}
+
+// function initArray(){
+//   for(let i = 0 ; i < numberPointX; i++ ){
+//     for(let j = 0 ; j < numberPointY; j++ ){
+//       let positionX = i*gapX+gapX;
+//       let positionY = j*gapY+gapY;
+//       pointArray.push([positionX,positionY]);
+//     }
+//   }
+// }
+
+// function setup() {
+//   createCanvas(600, 600);
+//   pg = createGraphics(600, 600);
+//   pgPosition = createGraphics(600, 600);
+//   background(0);
+//   // stroke(0, 15);
+//   // noFill();
+//   stroke(0);
+//   // noStroke();
+//   fill(0, 0, 0);
+//   // t = 0;
+//   // xPosition = lngToXWorld(long, projectionSize)
+//   // yPosition = latToYWorld(long, projectionSize)
+//   bgColor = 0;
+//   numberPointX = 25;
+//   numberPointY = 25;
+//   pointArray = [];
+//   gapX = width / numberPointX -1;
+//   gapY = height / numberPointY - 1;
+//   initArray();
+//   startTime = Date.now();
+// }
 
 function doThisOnLocation(position){
   console.log("lat: " + position.latitude);
@@ -107,32 +107,36 @@ function drawPosition(x, y, r ){
 
 }
 
-function draw() {
-  background(bgColor, 5);
-  let millis = (Date.now() - startTime)/1000000;
-  pg.clear();
-  pgPosition.background(0, 10);
-  pg.stroke('rgba(255,255,255, 0.5)');
+// function draw() {
+//   if(checkOurPosition){
+//     getCurrentPosition(doThisOnLocation);
+//     console.log("check")
+//   }
+//   background(bgColor, 5);
+//   let millis = (Date.now() - startTime)/1000000;
+//   pg.clear();
+//   pgPosition.background(0, 10);
+//   pg.stroke('rgba(255,255,255, 0.5)');
 
-  translate(2, 2);
-  drawGrid(millis);
-  pgPosition.stroke('rgba(255,20,147, 1)');
-  pgPosition.fill('rgba(255,20,147, 1)');
+//   translate(2, 2);
+//   drawGrid(millis);
+//   pgPosition.stroke('rgba(255,20,147, 1)');
+//   pgPosition.fill('rgba(255,20,147, 1)');
 
-  drawGrid(millis);
-  image(pgPosition, 0,0);
+//   drawGrid(millis);
+//   image(pgPosition, 0,0);
 
-  translate(2, 2);
-  image(pg, 0,0);
-  image(pg, 0,0);
+//   translate(2, 2);
+//   image(pg, 0,0);
+//   image(pg, 0,0);
 
-  fill(0);
-  drawPosition(millis*500, millis*200, 40);
-  //position soiréee
-  fill(0);
-  stroke(255);
-  ellipse(200, 200, 100, 100);
-}
+//   fill(0);
+//   drawPosition(millis*500, millis*200, 40);
+//   //position soiréee
+//   fill(0);
+//   stroke(255);
+//   ellipse(200, 200, 100, 100);
+// }
 
 function getPointXGrid(x, y, millis){
   x = x*0.01;
