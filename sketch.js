@@ -28,6 +28,17 @@ const clickButton = document.querySelector(".click");
 
 // console.log(lngToXWorld(long, projectionSize));
 
+const click = document.querySelector(".click");
+click.addEventListener('click', function(){
+  console.log("cilck");
+  id = navigator.geolocation.watchPosition(setPos, error);
+  console.log(id);
+})
+
+function error(e){
+  console.log(e);
+}
+
 let numberPointX ;
 let numberPointY ;
 let pointArray;
@@ -47,13 +58,14 @@ function setup() {
     alert("navigator.geolocation is not available");
   }
   // navigator.geolocation.getCurrentPosition(setPos);
-  id = navigator.geolocation.watchPosition(setPos);
+
 
 }
 
 function setPos(position) {
   var lat = position.coords.latitude;
   var lng = position.coords.longitude;
+  console.log(lat, lng)
   background(0);
   fill(255);
   textSize(32);
