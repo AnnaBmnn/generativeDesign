@@ -11,13 +11,7 @@ latToYWorld = function(lat, projectionSize) {
   return ((radius / 2 * Math.log((1 + Math.sin(lat * Math.PI / 180)) / (1 - Math.sin(lat * Math.PI / 180)))) - falseNorthing) * -1;
 };
 
-// console.log(window.innerWidth);
-// let windowWidth = window.innerWidth;
-// let windowHeight = window.innerHeight;
-// window.addEventListener("resize", ()=> {
-//   windowWidth = window.innerWidth;
-//   windowHeight = window.innerHeight;
-// })
+
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
@@ -55,10 +49,17 @@ let startTime;
 let bgColor;
 let graphicForGrid;
 let graphicForPositionMe;
-let longParty = 2.448451;
+let longParty = 2.418451;
 let latParty = 48.863812;
-let longMe = 2.333333;
-let latMe = 48.866667;
+// croix de chavaux
+let longMe = 2.2857587;
+let latMe = 48.857946;
+// let longMe = 2.4357587;
+// let latMe = 48.857946;
+//Paris (loin)
+// let longMe = 2.333333;
+// let latMe = 48.866667;
+
 let projectionSize;
 let minWindow;
 let positionParty = {
@@ -77,7 +78,11 @@ let positionMe = {
 
 function setup() {
   // init canvas and graphics
-  createCanvas(windowWidth*0.75, windowHeight*0.75);
+  if(windowWidth > windowHeight) {
+    createCanvas(windowWidth*0.45, windowHeight*0.75);
+  } else {
+    createCanvas(windowWidth*0.75, windowHeight*0.75);
+  }
   graphicForGrid = createGraphics(width, height);
   graphicForPositionMe = createGraphics(width, height);
 
@@ -117,7 +122,8 @@ function setup() {
 function draw() {
   background(bgColor, 5);
   let millis = (Date.now() - startTime)/1000000;
-
+  positionMe.x += 1;
+  positionMe.y += 0.001;
   // draw position soirée
   graphicForPositionMe.background(0, 10);
   graphicForPositionMe.stroke('rgba(255,20,147, 1)');
@@ -135,7 +141,9 @@ function draw() {
   // draw position soiréee
   fill(0);
   stroke(255);
-  ellipse(positionParty.x, positionParty.y, 100);
+  let distMe = dist(positionParty.x, positionParty.y, positionMe.x, positionMe.y);
+  console.log(distMe);
+  ellipse(positionParty.x, positionParty.y, (Math.cos(noise(millis*20,millis*30)*0.2*distMe))*10+40);
 }
 
 
@@ -167,6 +175,7 @@ function getLongToXGrid(long){
   let x = lngToXWorld(long, projectionSize);
   let minX = min(xMe, xParty);
   let maxX = max(xMe, xParty);
+  console.log(minX-maxX);
   minX = Math.floor(minX*10)/10;
   maxX = Math.ceil(maxX*10)/10;
 
@@ -183,10 +192,7 @@ function getLatToYGrid(lat){
   let maxY = max(yMe, yParty);
   minY = Math.floor(minY*100)/100;
   maxY = Math.ceil(maxY*100)/100+0.01;
-  console.log({minY,maxY, y});
-
   y = map(y, minY, maxY, 0, height);
-  console.log({minY,maxY, y});
 
   return y;
 }
