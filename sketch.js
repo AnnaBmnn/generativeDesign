@@ -1,6 +1,5 @@
 // import {lngToXWorld}  from "./assets/js/mercator.js";
 //Longitude de Strasbourg: 7.7521113
-
 // Latitude de Strasbourg: 48.5734053
 lngToXWorld = function(lon, projectionSize) {
   var radius = projectionSize / (2 * Math.PI);
@@ -13,6 +12,17 @@ latToYWorld = function(lat, projectionSize) {
   var falseNorthing = projectionSize / 2;
   return ((radius / 2 * Math.log((1 + Math.sin(lat * Math.PI / 180)) / (1 - Math.sin(lat * Math.PI / 180)))) - falseNorthing) * -1;
 };
+let checkOurPosition = false;
+const clickButton = document.querySelector("div");
+clickButton.addEventListener("click", ()=> {
+  checkOurPosition = true;
+  console.log(geoplugin_latitude(), geoplugin_longitude());
+  // navigator.geolocation.getCurrentPosition(success, error, options);
+})
+window.setInterval(function(){ 
+  // console.log(geoplugin_latitude(), geoplugin_longitude());
+  console.log("kikou");
+ }, 2000);
 
 // let t;
 // let long = 7.7521113;
@@ -32,6 +42,25 @@ let startTime;
 let bgColor;
 let pg;
 let pgPosition;
+var options = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0
+};
+
+function success(pos) {
+  var crd = pos.coords;
+
+  console.log('Votre position actuelle est :');
+  console.log(`Latitude : ${crd.latitude}`);
+  console.log(`Longitude : ${crd.longitude}`);
+  console.log(`La précision est de ${crd.accuracy} mètres.`);
+}
+
+function error(err) {
+  console.warn(`ERREUR (${err.code}): ${err.message}`);
+}
+
 
 
 function initArray(){
@@ -49,10 +78,7 @@ function setup() {
   pg = createGraphics(600, 600);
   pgPosition = createGraphics(600, 600);
   background(0);
-  // stroke(0, 15);
-  // noFill();
   stroke(0);
-  // noStroke();
   fill(0, 0, 0);
   // t = 0;
   // xPosition = lngToXWorld(long, projectionSize)
@@ -67,6 +93,11 @@ function setup() {
   startTime = Date.now();
 }
 
+function doThisOnLocation(position){
+  console.log("lat: " + position.latitude);
+  console.log("long: " + position.longitude);
+}
+
 function drawPosition(x, y, r ){
   x = x*gapX+gapX;
   y = y*gapY+gapY;
@@ -77,31 +108,36 @@ function drawPosition(x, y, r ){
 }
 
 function draw() {
-  // background(bgColor);
   background(bgColor, 5);
-  // pgPosition.background(bgColor, 5);
   let millis = (Date.now() - startTime)/1000000;
-  // pg.background(0);
   pg.clear();
   pgPosition.background(0, 10);
   pg.stroke('rgba(255,255,255, 0.5)');
-  pgPosition.stroke('rgba(255,255,255, 0.5)');
+
   translate(2, 2);
   drawGrid(millis);
+  pgPosition.stroke('rgba(255,20,147, 1)');
+  pgPosition.fill('rgba(255,20,147, 1)');
+
+  drawGrid(millis);
   image(pgPosition, 0,0);
+
+  translate(2, 2);
+  image(pg, 0,0);
   image(pg, 0,0);
 
   fill(0);
-  drawPosition(18-millis*500, 18-millis*200, 40);
   drawPosition(millis*500, millis*200, 40);
+  //position soiréee
+  fill(0);
+  stroke(255);
+  ellipse(200, 200, 100, 100);
 }
 
 function getPointXGrid(x, y, millis){
   x = x*0.01;
   y = y*millis +x;
   return 20 * noise( x, y)+x*100;
-  xLoc = random(0, 10);
-  yLoc = random(10, 100);
 }
 function getPointYGrid(x, y, millis){
   xLoc = random(0, 10);
