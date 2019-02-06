@@ -30,6 +30,9 @@ let gapX;
 let gapY;
 let startTime;
 let bgColor;
+let pg;
+let pgPosition;
+
 
 function initArray(){
   for(let i = 0 ; i < numberPointX; i++ ){
@@ -43,6 +46,8 @@ function initArray(){
 
 function setup() {
   createCanvas(600, 600);
+  pg = createGraphics(600, 600);
+  pgPosition = createGraphics(600, 600);
   background(0);
   // stroke(0, 15);
   // noFill();
@@ -67,17 +72,25 @@ function drawPosition(x, y, r ){
   y = y*gapY+gapY;
   x =  20 * noise(x * 0.01, y * millis)+x;
   y = 20 * noise(x * 0.01, y * millis)+y;
-  ellipse(x, y, r, r);
+  pgPosition.ellipse(x, y, r, r);
 
 }
 
 function draw() {
   // background(bgColor);
-  background(bgColor, 3);
+  background(bgColor, 5);
+  // pgPosition.background(bgColor, 5);
   let millis = (Date.now() - startTime)/1000000;
-  stroke('rgba(255,255,255, 0.5)');
+  // pg.background(0);
+  pg.clear();
+  pgPosition.background(0, 10);
+  pg.stroke('rgba(255,255,255, 0.5)');
+  pgPosition.stroke('rgba(255,255,255, 0.5)');
   translate(2, 2);
   drawGrid(millis);
+  image(pgPosition, 0,0);
+  image(pg, 0,0);
+
   fill(0);
   drawPosition(18-millis*500, 18-millis*200, 40);
   drawPosition(millis*500, millis*200, 40);
@@ -111,12 +124,12 @@ function drawGrid(millis){
       xNextHorizontal = pointArray[i+numberPointX][0];
       xNextHorizontal = getPointXGrid(xNextHorizontal, yNextHorizontal,millis);
       yNextHorizontal = getPointYGrid(xNextHorizontal, yNextHorizontal,millis);
-      line(x, y, xNextHorizontal, yNextHorizontal);
+      pg.line(x, y, xNextHorizontal, yNextHorizontal);
     }
     // ellipse(x,y, 3, 3);
     if(i%numberPointX == numberPointX-1){
     } else {
-      line(x, y, xNext, yNext);
+      pg.line(x, y, xNext, yNext);
     }
   }
 }
