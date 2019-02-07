@@ -30,15 +30,21 @@ function windowResized() {
 
 // console.log(lngToXWorld(long, projectionSize));
 
-// const click = document.querySelector(".click");
-// click.addEventListener('click', function(){
-//   console.log("cilck");
-//   id = navigator.geolocation.watchPosition(setPos, error);
-//   navigator.geolocation.getCurrentPosition(setPos);
+const click = document.querySelector(".click");
+click.addEventListener('click', function(){
+  console.log("cilck");
+  id = navigator.geolocation.watchPosition(setPos, error);
+  navigator.geolocation.getCurrentPosition(setPos);
 
-// })
+})
 
-
+function setPos(position) {
+  console.log(position.coords.longitude);
+  console.log(position.coords.latitude);
+}
+function error(position) {
+  console.log(position);
+}
 
 let numberPointX ;
 let numberPointY ;
@@ -93,7 +99,7 @@ let positionMe = {
 }
 
 function preload() {
-   druk = loadFont('./assets/fonts/Druk-Wide-Super.otf');
+  //  druk = loadFont('./assets/fonts/Druk-Wide-Super.otf');
 }
 
 function setup() {
@@ -152,7 +158,7 @@ function draw() {
   // background(bgColor, 5);
   textAlign(LEFT);
 
-  textFont(druk);
+  // textFont(druk);
   // text 
   push();
   fill(255);
