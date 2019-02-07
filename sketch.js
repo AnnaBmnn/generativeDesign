@@ -145,6 +145,8 @@ function setup() {
 
 function draw() {
   // background(bgColor, 5);
+  textAlign(LEFT);
+
   textFont(druk);
   // text 
   push();
@@ -190,6 +192,7 @@ function draw() {
   ellipse(positionParty.x, positionParty.y, 70+2*cos(10000/distMe));
 
   // text
+  textAlign(RIGHT);
   noStroke();
   fill(255);
   textSize(16);
