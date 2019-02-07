@@ -126,15 +126,17 @@ function setup() {
 }
 
 function draw() {
-  background(bgColor, 5);
+  background(bgColor);
   let millis = (Date.now() - startTime)/1000000;
-  // positionMe.x += 1;
-  // positionMe.y += 0.001;
+  positionMe.x += 0.1;
+  positionMe.y += 0.1;
+  let distMe = dist(positionParty.x, positionParty.y, positionMe.x, positionMe.y);
+
   // draw position soirée
-  graphicForPositionMe.background(0, 10);
+  graphicForPositionMe.background(0, 5);
   graphicForPositionMe.stroke('rgba(255,20,147, 1)');
   graphicForPositionMe.fill('rgba(255,20,147, 1)');
-  drawPosition(positionMe.x, positionMe.y, 40);
+  drawPosition(positionMe.x, positionMe.y, 200-distMe);
   image(graphicForPositionMe, 0,0);
 
 
@@ -172,8 +174,8 @@ function draw() {
   // draw position soiréee
   fill(0);
   stroke(255);
-  let distMe = dist(positionParty.x, positionParty.y, positionMe.x, positionMe.y);
-  ellipse(positionParty.x, positionParty.y, (Math.cos(noise(millis*20,millis*30)*-1.9*distMe))*10+40);
+  console.log()
+  ellipse(positionParty.x, positionParty.y, 70+10*cos(10000/distMe));
 
 
 }
@@ -229,8 +231,10 @@ function getLatToYGrid(lat){
 }
 
 function drawPosition(x, y, r ){
-  x =  20 * noise(x * 0.01, y * millis)+x;
-  y = 20 * noise(x * 0.01, y * millis)+y;
+  // x =  20 * noise(x * 0.01, y * millis)+x;
+  // y = 20 * noise(x * 0.01, y * millis)+y;
+  // r = (noise( 2, r ))*1000+10;
+  console.log(r);
   graphicForPositionMe.ellipse(x, y, r, r);
 }
 
