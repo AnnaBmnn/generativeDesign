@@ -88,7 +88,7 @@ let positionMe = {
 }
 
 function preload() {
-  druk = loadFont('./assets/fonts/Druk-Wide-Heavy.otf');
+  druk = loadFont('./assets/fonts/Druk Wide Bold.otf');
 }
 
 function setup() {
