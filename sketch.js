@@ -60,8 +60,8 @@ let latParty = 48.8623357;
 // let latMe = 48.8122302;
 
 // NEUILLY SUR SEINE
-let longMe = 2.2695658;
-let latMe = 48.884683;
+// let longMe = 2.2695658;
+// let latMe = 48.884683;
 
 // CORIX DE CHAVAUX
 // let longMe = 2.4357587;
@@ -70,6 +70,11 @@ let latMe = 48.884683;
 // STRASBOURG
 // let longMe = 7.7507127;
 // let latMe = 48.584614;
+
+// POSITION
+latMe = geoplugin_latitude();
+longMe = geoplugin_longitude();
+
 
 let projectionSize;
 let minWindow;
