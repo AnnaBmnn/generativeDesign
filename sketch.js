@@ -198,8 +198,8 @@ function draw() {
   textSize(16);
   push();
   translate(width-10, 0);
-  text(textLongPos, 10 , 10);
-  text(textLatPos, 10 , 36);
+  text(textLongPos, 10 , 30);
+  text(textLatPos, 10 , 46);
   pop();
 }
 
