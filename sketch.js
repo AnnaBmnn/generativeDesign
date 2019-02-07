@@ -88,7 +88,7 @@ let positionMe = {
 }
 
 function preload() {
-  druk = loadFont('./assets/fonts/Druk-Wide-Super.otf');
+   druk = loadFont('./assets/fonts/Druk-Wide-Super.otf');
 }
 
 function setup() {
@@ -193,10 +193,10 @@ function draw() {
 
   // text
   textAlign(RIGHT);
-  noStroke();
-  fill(255);
-  textSize(16);
   push();
+  stroke(255);
+  noFill();
+  textSize(16);
   translate(width-10, 0);
   text(textLongPos, 10 , height-height*0.1);
   text(textLatPos, 10 , height-height*0.1-26);
