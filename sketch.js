@@ -11,41 +11,39 @@ latToYWorld = function(lat, projectionSize) {
   return ((radius / 2 * Math.log((1 + Math.sin(lat * Math.PI / 180)) / (1 - Math.sin(lat * Math.PI / 180)))) - falseNorthing) * -1;
 };
 
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
-// const clickButton = document.querySelector(".click");
-// clickButton.addEventListener("click", ()=> {
-//   checkOurPosition = true;
-//   console.log("click");
-// })
-
-// let t;
-// let long = 7.7521113;
-// let lat = 48.5734053;
-// let projectionSize = 1;
-// let xPosition;
-// let yPosition;
-
-// console.log(lngToXWorld(long, projectionSize));
-
 const click = document.querySelector(".click");
 click.addEventListener('click', function(){
-  console.log("cilck");
-  id = navigator.geolocation.watchPosition(setPos, error);
-  navigator.geolocation.getCurrentPosition(setPos);
+  navigator.geolocation.getCurrentPosition((position)=>{
+    isPosition = true;
+    longMe = position.coords.longitude;
+    latMe = position.coords.latitude;
+    initPositions();
+    console.log("got");
+    clear();
+    graphicForGrid.clear();
+    background(bgColor);
+    console.log("initPositions");
+    id = navigator.geolocation.watchPosition(setPos, error);
+  });
 
 })
 
 function setPos(position) {
-  console.log(position.coords.longitude);
-  console.log(position.coords.latitude);
+  console.log("setPost");
+  longMe = position.coords.longitude;
+  latMe = position.coords.latitude;
 }
 function error(position) {
   console.log(position);
 }
 
+function windowResized() {
+  let sizeCanvasCalculated = calculateSizeCanvas();
+  resizeCanvas(sizeCanvasCalculated.widthCanvas, sizeCanvasCalculated.heightCanvas);
+  initArray();
+}
+
+let isPosition = false;
 let numberPointX ;
 let numberPointY ;
 let pointArray;
@@ -54,7 +52,6 @@ let gapY;
 let startTime;
 let bgColor;
 let graphicForGrid;
-let graphicForPositionMe;
 let textVar;
 let textLongPos;
 let textLatPos;
@@ -99,27 +96,40 @@ let positionMe = {
 }
 
 function preload() {
-  //  druk = loadFont('./assets/fonts/Druk-Wide-Super.otf');
+   druk = loadFont('./assets/fonts/Druk-Wide-Super.otf');
+}
+
+function calculateSizeCanvas(){
+  let widthCanvas, heightCanvas;
+  if(width > 1000) {
+    if(windowWidth > windowHeight) {
+      widthCanvas = windowWidth*0.45;
+      heightCanvas = windowWidth*0.45;
+      return {widthCanvas, heightCanvas}
+    } else {
+      widthCanvas = windowWidth*0.45;
+      heightCanvas = windowWidth*0.45;
+      return {widthCanvas, heightCanvas}
+    }
+  } else {
+    if(windowWidth > windowHeight) {
+      widthCanvas = windowHeight*0.75;
+      heightCanvas = windowHeight*0.75;
+      return {widthCanvas, heightCanvas}
+    } else {
+      widthCanvas = windowWidth*0.75;
+      heightCanvas = windowWidth*0.75;
+      return {widthCanvas, heightCanvas}
+    }
+  }
 }
 
 function setup() {
   // init canvas and graphics
-  if(width > 1000) {
-    if(windowWidth > windowHeight) {
-      createCanvas(windowWidth*0.45, windowWidth*0.45);
-    } else {
-      createCanvas(windowWidth*0.45, windowWidth*0.45);
-    }
-  } else {
-    if(windowWidth > windowHeight) {
-      createCanvas(windowHeight*0.75, windowHeight*0.75);
-    } else {
-      createCanvas(windowWidth*0.75, windowWidth*0.75);
-    }
-  }
+  let sizeCanvasCalculated = calculateSizeCanvas();
+  createCanvas(sizeCanvasCalculated.widthCanvas, sizeCanvasCalculated.heightCanvas);
 
   graphicForGrid = createGraphics(width, height);
-  graphicForPositionMe = createGraphics(width, height);
 
   // init variable
   bgColor = 0;
@@ -131,15 +141,8 @@ function setup() {
   gapX = minWindow*0.90 / numberPointX -1;
   gapY = minWindow*0.90 / numberPointY - 1;
   projectionSize = 100;
-  positionParty.xLong = lngToXWorld(longParty, projectionSize);
-  positionParty.yLat = latToYWorld(latParty, projectionSize);
-  positionMe.xLong = lngToXWorld(longMe, projectionSize);
-  positionMe.yLat = latToYWorld(latMe, projectionSize);
 
-  positionParty.x = getLongToXGrid(longParty);
-  positionParty.y = getLatToYGrid(latParty);
-  positionMe.x = getLongToXGrid(longMe);
-  positionMe.y = getLatToYGrid(latMe);
+  initPositions();
   // init value for canvas
   background(bgColor);
   let translateX = (width - minWindow)*0.5 === 0 ? 20 : (width - minWindow)*0.5  ;
@@ -150,15 +153,14 @@ function setup() {
   initArray();
   startTime = Date.now();
   textVar = `SOIRÉE ÉPHÉMÈRE `;
-  textLongPos = `long: ${longMe}`;
-  textLatPos = `lat: ${latMe}`;
+
 }
 
 function draw() {
   // background(bgColor, 5);
   textAlign(LEFT);
 
-  // textFont(druk);
+  textFont(druk);
   // text 
   push();
   fill(255);
@@ -169,11 +171,22 @@ function draw() {
   text(textVar, 0, 0);
   pop();
 
-
+  // longMe += 0.001;
   let millis = (Date.now() - startTime)/1000000;
-  positionMe.x += 0.1;
-  positionMe.y += 0.1;
   let distMe = dist(positionParty.x, positionParty.y, positionMe.x, positionMe.y);
+
+  // #TODO IF POSITION ELSE MOVE
+  if(isPosition){
+    positionMe.xLong = lngToXWorld(longMe, projectionSize);
+    positionMe.yLat = latToYWorld(latMe, projectionSize);
+
+    positionMe.x = getLongToXGrid(longMe);
+    positionMe.y = getLatToYGrid(latMe);
+  } else {
+    positionMe.x = cos(millis*30)*200 + width*0.5;
+    positionMe.y = sin(millis*30)*200 + height*0.5;
+  }
+
 
   // draw position soirée
   background(bgColor, 5);
@@ -203,6 +216,8 @@ function draw() {
   ellipse(positionParty.x, positionParty.y, 70+2*cos(10000/distMe));
 
   // text
+  textLongPos = `long: ${longMe}`;
+  textLatPos = `lat: ${latMe}`;
   textAlign(RIGHT);
   push();
   stroke(255);
@@ -214,6 +229,18 @@ function draw() {
   pop();
 }
 
+function initPositions(){
+  positionParty.xLong = lngToXWorld(longParty, projectionSize);
+  positionParty.yLat = latToYWorld(latParty, projectionSize);
+  positionMe.xLong = lngToXWorld(longMe, projectionSize);
+  positionMe.yLat = latToYWorld(latMe, projectionSize);
+
+  positionParty.x = getLongToXGrid(longParty);
+  positionParty.y = getLatToYGrid(latParty);
+  positionMe.x = getLongToXGrid(longMe);
+  positionMe.y = getLatToYGrid(latMe);
+  console.log(positionMe);
+}
 
 
 function initArray(){
@@ -265,7 +292,6 @@ function getLatToYGrid(lat){
 }
 
 function drawPosition(x, y, r ){
-
   ellipse(x, y, r, r);
 }
 
