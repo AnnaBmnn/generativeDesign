@@ -57,12 +57,16 @@ let latParty = 48.8623357;
 // let latMe = 48.8122302;
 
 // NEUILLY SUR SEINE
-let longMe = 2.2695658;
-let latMe = 48.884683;
+// let longMe = 2.2695658;
+// let latMe = 48.884683;
 
 // CORIX DE CHAVAUX
-// let longMe = 2.4357587;
-// let latMe = 48.857946;
+let longMe = 2.4357587;
+let latMe = 48.857946;
+
+// STRASBOURG
+// let longMe = 7.7507127;
+// let latMe = 48.584614;
 
 let projectionSize;
 let minWindow;
@@ -133,18 +137,45 @@ function draw() {
   drawPosition(positionMe.x, positionMe.y, 40);
   image(graphicForPositionMe, 0,0);
 
+
+  // forme
+  noFill();
+  stroke('rgba(100,100,255, 0.5)');
+  beginShape();
+  vertex(30, 20);
+  bezierVertex(-10, -10, width, 75, 30, height*0.4);
+  bezierVertex(30, 20, width, 75, 30, height);
+  // bezierVertex(50, 80, 60, 25, 30, 20);
+  endShape();
+  beginShape();
+  vertex(width, height);
+  bezierVertex(width*0.5, height, 30, 40, width*0.2, height);
+  // bezierVertex(30, 20, width, 75, 30, height);
+  // bezierVertex(50, 80, 60, 25, 30, 20);
+  endShape();
+  beginShape();
+  vertex(width, height*0.1);
+  bezierVertex(width*0.3, height*0.2, height*0.5, width, width*0.2, height);
+  // bezierVertex(30, 20, width, 75, 30, height);
+  // bezierVertex(50, 80, 60, 25, 30, 20);
+  endShape();
+  fill(0);
+
   // draw grid
-  
   graphicForGrid.clear();
-  graphicForGrid.stroke('rgba(255,255,255, 0.5)');
+  graphicForGrid.stroke('rgba(255,255,255, 1)');
   drawGrid(millis);
   image(graphicForGrid, 0,0);
+
+
 
   // draw position soiréee
   fill(0);
   stroke(255);
   let distMe = dist(positionParty.x, positionParty.y, positionMe.x, positionMe.y);
-  ellipse(positionParty.x, positionParty.y, (Math.cos(noise(millis*20,millis*30)*0.2*distMe))*10+40);
+  ellipse(positionParty.x, positionParty.y, (Math.cos(noise(millis*20,millis*30)*-1.9*distMe))*10+40);
+
+
 }
 
 
