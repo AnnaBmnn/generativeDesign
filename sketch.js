@@ -197,7 +197,7 @@ function draw() {
   fill(255);
   textSize(16);
   push();
-  translate(width*0.5, 0);
+  translate(width, 0);
   text(textLongPos, 10 , height-height*0.1);
   text(textLatPos, 10 , height-height*0.1-26);
   pop();
