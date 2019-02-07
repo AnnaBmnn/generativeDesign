@@ -57,12 +57,12 @@ let latParty = 48.8623357;
 // let latMe = 48.8122302;
 
 // NEUILLY SUR SEINE
-// let longMe = 2.2695658;
-// let latMe = 48.884683;
+let longMe = 2.2695658;
+let latMe = 48.884683;
 
 // CORIX DE CHAVAUX
-let longMe = 2.4357587;
-let latMe = 48.857946;
+// let longMe = 2.4357587;
+// let latMe = 48.857946;
 
 // STRASBOURG
 // let longMe = 7.7507127;
@@ -113,12 +113,11 @@ function setup() {
   positionParty.y = getLatToYGrid(latParty);
   positionMe.x = getLongToXGrid(longMe);
   positionMe.y = getLatToYGrid(latMe);
-  console.log({positionMe, positionParty});
   // init value for canvas
   background(bgColor);
   let translateX = (width - minWindow)*0.5 === 0 ? 20 : (width - minWindow)*0.5  ;
   let translateY = (height - minWindow)*0.5 === 0 ? 20 : (height - minWindow)*0.5;
-  graphicForGrid.translate(translateX, translateY);
+  translate(translateX, translateY);
   stroke(0);
   fill(0, 0, 0);
   initArray();
@@ -126,58 +125,42 @@ function setup() {
 }
 
 function draw() {
-  background(bgColor);
+  // background(bgColor, 5);
+  // shearX(PI/20)
+
   let millis = (Date.now() - startTime)/1000000;
   positionMe.x += 0.1;
   positionMe.y += 0.1;
   let distMe = dist(positionParty.x, positionParty.y, positionMe.x, positionMe.y);
 
   // draw position soirée
-  graphicForPositionMe.background(0, 5);
-  graphicForPositionMe.stroke('rgba(255,20,147, 1)');
-  graphicForPositionMe.fill('rgba(255,20,147, 1)');
-  drawPosition(positionMe.x, positionMe.y, 200-distMe);
-  image(graphicForPositionMe, 0,0);
-
-
-  // forme
-  noFill();
-  stroke('rgba(100,100,255, 0.5)');
-  beginShape();
-  vertex(30, 20);
-  bezierVertex(-10, -10, width, 75, 30, height*0.4);
-  bezierVertex(30, 20, width, 75, 30, height);
-  // bezierVertex(50, 80, 60, 25, 30, 20);
-  endShape();
-  beginShape();
-  vertex(width, height);
-  bezierVertex(width*0.5, height, 30, 40, width*0.2, height);
-  // bezierVertex(30, 20, width, 75, 30, height);
-  // bezierVertex(50, 80, 60, 25, 30, 20);
-  endShape();
-  beginShape();
-  vertex(width, height*0.1);
-  bezierVertex(width*0.3, height*0.2, height*0.5, width, width*0.2, height);
-  // bezierVertex(30, 20, width, 75, 30, height);
-  // bezierVertex(50, 80, 60, 25, 30, 20);
-  endShape();
-  fill(0);
-
-  // draw grid
-  graphicForGrid.clear();
-  graphicForGrid.stroke('rgba(255,255,255, 1)');
-  drawGrid(millis);
+  background(bgColor, 5);
+  stroke('rgba(255,20,147, 0.5)');
+  fill('rgba(255,20,147, 0.5)');
+  drawPosition(positionMe.x, positionMe.y, 40);
+  
+  // drawPosition(positionMe.x, positionMe.y, 200-distMe);
   image(graphicForGrid, 0,0);
 
-
+  fill(0);
+  // draw grid
+  // push();
+  // clear(); 
+  // stroke('rgba(255,0,0, 1)');
+  // stroke('rgba(255,255,255, 1)');
+  stroke('rgba(216,70,255, 0.4)');
+  drawGrid(millis);
+  image(graphicForGrid, 0,0);
+  stroke('rgba(0,255,255,0.4)');
+  translate(2,2);
+  drawGrid(millis);
+  image(graphicForGrid, 0,0);
+  // pop();
 
   // draw position soiréee
   fill(0);
   stroke(255);
-  console.log()
-  ellipse(positionParty.x, positionParty.y, 70+10*cos(10000/distMe));
-
-
+  ellipse(positionParty.x, positionParty.y, 70+2*cos(10000/distMe));
 }
 
 
@@ -231,11 +214,8 @@ function getLatToYGrid(lat){
 }
 
 function drawPosition(x, y, r ){
-  // x =  20 * noise(x * 0.01, y * millis)+x;
-  // y = 20 * noise(x * 0.01, y * millis)+y;
-  // r = (noise( 2, r ))*1000+10;
-  console.log(r);
-  graphicForPositionMe.ellipse(x, y, r, r);
+
+  ellipse(x, y, r, r);
 }
 
 function drawGrid(millis){
@@ -253,11 +233,11 @@ function drawGrid(millis){
       xNextHorizontal = pointArray[i+numberPointX][0];
       xNextHorizontal = getPointXGrid(xNextHorizontal, yNextHorizontal,millis);
       yNextHorizontal = getPointYGrid(xNextHorizontal, yNextHorizontal,millis);
-      graphicForGrid.quad(x, y, xNextHorizontal, yNextHorizontal);
+      quad(x, y, xNextHorizontal, yNextHorizontal);
     }
     if(i%numberPointX == numberPointX-1){
     } else {
-      graphicForGrid.line(x, y, xNext, yNext);
+      line(x, y, xNext, yNext);
     }
   }
 }
