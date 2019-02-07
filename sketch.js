@@ -49,6 +49,9 @@ let startTime;
 let bgColor;
 let graphicForGrid;
 let graphicForPositionMe;
+let textVar;
+let textLongPos;
+let textLatPos;
 // MAIRIE DE MONTREUIL
 let longParty = 2.4412184;
 let latParty = 48.8623357;
@@ -84,13 +87,26 @@ let positionMe = {
   yLat: 0
 }
 
+function preload() {
+  druk = loadFont('./assets/fonts/Druk-Wide-Super.otf');
+}
+
 function setup() {
   // init canvas and graphics
-  if(windowWidth > windowHeight) {
-    createCanvas(windowWidth*0.45, windowHeight*0.75);
+  if(width > 1000) {
+    if(windowWidth > windowHeight) {
+      createCanvas(windowWidth*0.45, windowWidth*0.45);
+    } else {
+      createCanvas(windowWidth*0.45, windowWidth*0.45);
+    }
   } else {
-    createCanvas(windowWidth*0.75, windowHeight*0.75);
+    if(windowWidth > windowHeight) {
+      createCanvas(windowHeight*0.75, windowHeight*0.75);
+    } else {
+      createCanvas(windowWidth*0.75, windowWidth*0.75);
+    }
   }
+
   graphicForGrid = createGraphics(width, height);
   graphicForPositionMe = createGraphics(width, height);
 
@@ -122,11 +138,24 @@ function setup() {
   fill(0, 0, 0);
   initArray();
   startTime = Date.now();
+  textVar = `SOIRÉE ÉPHÉMÈRE `;
+  textLongPos = `long: ${longMe}`;
+  textLatPos = `lat: ${latMe}`;
 }
 
 function draw() {
   // background(bgColor, 5);
-  // shearX(PI/20)
+  textFont(druk);
+  // text 
+  push();
+  fill(255);
+  noStroke();
+  rotate(PI/2);
+  translate(height*0.05, -10);
+  textSize(32);
+  text(textVar, 0, 0);
+  pop();
+
 
   let millis = (Date.now() - startTime)/1000000;
   positionMe.x += 0.1;
@@ -144,10 +173,8 @@ function draw() {
 
   fill(0);
   // draw grid
-  // push();
-  // clear(); 
-  // stroke('rgba(255,0,0, 1)');
-  // stroke('rgba(255,255,255, 1)');
+  push();
+  translate(width*0.1, 10);
   stroke('rgba(216,70,255, 0.4)');
   drawGrid(millis);
   image(graphicForGrid, 0,0);
@@ -155,12 +182,19 @@ function draw() {
   translate(2,2);
   drawGrid(millis);
   image(graphicForGrid, 0,0);
-  // pop();
+  pop();
 
   // draw position soiréee
   fill(0);
   stroke(255);
   ellipse(positionParty.x, positionParty.y, 70+2*cos(10000/distMe));
+
+  // text
+  noStroke();
+  fill(255);
+  textSize(20);
+  text(textLongPos, 10 , height-height*0.1);
+  text(textLatPos, 10 , height-height*0.1-26);
 }
 
 
@@ -239,5 +273,11 @@ function drawGrid(millis){
     } else {
       line(x, y, xNext, yNext);
     }
+  }
+}
+
+function keyTyped(){
+  if(key === "s"){
+      saveCanvas(`${day()}-${hour()}-${minute()}`,"jpg");
   }
 }
