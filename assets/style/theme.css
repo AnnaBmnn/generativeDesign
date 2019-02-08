@@ -35,6 +35,15 @@ body {
 }
 
 
+@media screen and (max-width: 1200px) {
+    .infos {
+        background-color: rgba(0,0,0,0.6);
+        
+        width: 40vw;
+        right: unset;
+        left: 5vw;
+    }
+}
 @media screen and (max-width: 800px) {
     .infos {
         
