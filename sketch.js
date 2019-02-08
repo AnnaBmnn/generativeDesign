@@ -10,7 +10,7 @@ latToYWorld = function(lat, projectionSize) {
   var falseNorthing = projectionSize / 2;
   return ((radius / 2 * Math.log((1 + Math.sin(lat * Math.PI / 180)) / (1 - Math.sin(lat * Math.PI / 180)))) - falseNorthing) * -1;
 };
-
+const save = document.querySelector(".save");
 const click = document.querySelector(".click");
 click.addEventListener('click', function(){
   navigator.geolocation.getCurrentPosition((position)=>{
@@ -18,18 +18,18 @@ click.addEventListener('click', function(){
     longMe = position.coords.longitude;
     latMe = position.coords.latitude;
     initPositions();
-    console.log("got");
     clear();
     graphicForGrid.clear();
     background(bgColor);
-    console.log("initPositions");
     id = navigator.geolocation.watchPosition(setPos, error);
   });
+})
+save.addEventListener('click', function(){
+  saveCanvas(`${day()}-${hour()}-${minute()}`,"jpg");
 
 })
 
 function setPos(position) {
-  console.log("setPost");
   longMe = position.coords.longitude;
   latMe = position.coords.latitude;
 }
@@ -96,7 +96,7 @@ let positionMe = {
 }
 
 function preload() {
-   druk = loadFont('./assets/fonts/Druk-Wide-Super.otf');
+  druk = loadFont('./assets/fonts/Druk-Wide-Super.otf');
 }
 
 function calculateSizeCanvas(){
@@ -239,7 +239,6 @@ function initPositions(){
   positionParty.y = getLatToYGrid(latParty);
   positionMe.x = getLongToXGrid(longMe);
   positionMe.y = getLatToYGrid(latMe);
-  console.log(positionMe);
 }
 
 
